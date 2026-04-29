@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageTitle = document.getElementById('page-title');
     const generatePitchBtn = document.getElementById('generate-pitch');
     const pitchOutput = document.getElementById('pitch-output');
+    const matchInvestorsBtn = document.getElementById('match-investors');
+    const outreachOutput = document.getElementById('outreach-output');
 
     // --- Theme Toggle --- //
     const applyTheme = (theme) => {
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(pageId).classList.remove('hidden');
 
         // Update page title
-        pageTitle.textContent = link.querySelector('a').textContent;
+        pageTitle.textContent = link.querySelector('a').textContent.trim();
     });
 
     // --- Dashboard Demo Mode --- //
@@ -97,20 +99,80 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 pitchOutput.innerHTML = `
-                    <h4>Problem</h4>
-                    <p>${mockPitch.problem}</p>
-                    <h4>Solution</h4>
-                    <p>${mockPitch.solution}</p>
-                    <h4>Market</h4>
-                    <p>${mockPitch.market}</p>
-                    <h4>Business Model</h4>
-                    <p>${mockPitch.businessModel}</p>
-                    <h4>The Ask</h4>
-                    <p>${mockPitch.ask}</p>
+                    <div class="pitch-section"><h4>Problem</h4><p>${mockPitch.problem}</p></div>
+                    <div class="pitch-section"><h4>Solution</h4><p>${mockPitch.solution}</p></div>
+                    <div class="pitch-section"><h4>Market</h4><p>${mockPitch.market}</p></div>
+                    <div class="pitch-section"><h4>Business Model</h4><p>${mockPitch.businessModel}</p></div>
+                    <div class="pitch-section"><h4>The Ask</h4><p>${mockPitch.ask}</p></div>
                 `;
 
                 generatePitchBtn.disabled = false;
                 generatePitchBtn.textContent = '피치 생성';
+            }, 1500);
+        });
+    }
+
+    // --- Outreach Agent --- //
+    if (matchInvestorsBtn) {
+        matchInvestorsBtn.addEventListener('click', () => {
+            matchInvestorsBtn.disabled = true;
+            matchInvestorsBtn.textContent = '매칭 중...';
+            outreachOutput.innerHTML = '';
+
+            setTimeout(() => {
+                const mockInvestors = [
+                    {
+                        name: 'Sequoia Capital',
+                        fit: '92%',
+                        thesis: '전설적인 아이디어를 가진 대담한 창업가를 지원합니다. AI, SaaS, Fintech 등 기술 중심의 파괴적 혁신을 선호합니다.',
+                        reason: '입력하신 AI/ML 섹터와 Seed 단계에 대한 높은 관심도 및 포트폴리오 시너지를 기반으로 추천되었습니다.',
+                        message: '"Subject: AI 기반 반려동물 영양제의 미래\n\n안녕하세요, Sequoia 팀,\n\n귀사의 AI 분야에 대한 깊이 있는 투자 철학에 감명받아 연락드립니다. 저희는..."'
+                    },
+                    {
+                        name: 'a16z Seed',
+                        fit: '87%',
+                        thesis: '기술로 미래를 만드는 창업가, 특히 미국 시장을 목표로 하는 Web3, AI, 바이오 분야의 초기 팀에 투자합니다.',
+                        reason: '북미 시장을 타겟으로 하는 AI 스타트업으로서 a16z의 강력한 네트워크와 성장 지원 프로그램이 큰 도움이 될 것입니다.',
+                        message: '"Subject: a16z가 찾고 있는 기술 기반 스타트업\n\n안녕하세요 a16z Seed 팀,\n\nAndreessen Horowitz가 기술의 미래를 어떻게 만들어 가는지 항상 주목하고 있습니다. 저희는..."'
+                    },
+                    {
+                        name: 'Kakao Ventures',
+                        fit: '78%',
+                        thesis: '세상의 불편함을 해결하는 똑똑한 팀에게 투자합니다. 특히 초기 단계의 모바일, 게임, 블록체인, AI 스타트업을 선호합니다.',
+                        reason: '아시아 시장, 특히 한국 시장에서의 성공 가능성이 높고, 카카오 공동체와의 협력 가능성이 열려있습니다.',
+                        message: '"Subject: 카카오와 함께 세상을 바꿀 AI 스타트업\n\n안녕하세요 카카오벤처스 심사역님,\n\n귀사의 투자 포트폴리오와 스타트업 성장 지원에 깊은 인상을 받았습니다. 저희는..."'
+                    },
+                    {
+                        name: 'BonAngels',
+                        fit: '74%',
+                        thesis: '"될 때까지 함께한다"는 철학으로, 열정 넘치는 창업팀의 첫 번째 동반자가 되고자 합니다. 분야에 관계없이 초기 단계 팀에 집중합니다.',
+                        reason: 'Pre-seed/Seed 단계에 집중 투자하며, 창업팀과의 긴밀한 파트너십을 중시하는 만큼 초기 팀에게 훌륭한 파트너가 될 수 있습니다.',
+                        message: '"Subject: 열정으로 뭉친 초기 창업팀입니다.\n\n안녕하세요 본엔젤스 파트너님,\n\n"될 때까지 함께한다"는 귀사의 투자 철학이 저희 팀의 비전과 정확히 일치하여 연락드립니다. 저희는..."'
+                    }
+                ];
+
+                mockInvestors.forEach(investor => {
+                    const investorCard = `
+                        <div class="investor-card">
+                            <div class="investor-card-header">
+                                <h4>${investor.name}</h4>
+                                <span class="fit-score">적합도 ${investor.fit}</span>
+                            </div>
+                            <div class="investor-card-body">
+                                <h5>투자 Thesis</h5>
+                                <p>${investor.thesis}</p>
+                                <h5>추천 이유</h5>
+                                <p>${investor.reason}</p>
+                                <h5>개인화 아웃리치 메시지 초안</h5>
+                                <blockquote>${investor.message}</blockquote>
+                            </div>
+                        </div>
+                    `;
+                    outreachOutput.innerHTML += investorCard;
+                });
+
+                matchInvestorsBtn.disabled = false;
+                matchInvestorsBtn.textContent = '투자자 매칭';
             }, 2000);
         });
     }
