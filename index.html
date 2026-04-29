@@ -87,9 +87,42 @@
                 </div>
             </section>
 
+            <!-- Meeting Agent Page -->
+            <section id="meeting-agent-page" class="page-section hidden">
+                <div class="card">
+                    <h3>Meeting Agent: 완벽한 미팅 준비</h3>
+                    <p>미팅 정보를 입력하면 AI가 투자자와의 미팅을 완벽하게 준비할 수 있도록 맞춤형 전략과 자료를 생성합니다.</p>
+                    <div class="meeting-form">
+                        <div class="form-group">
+                            <label for="investor-name-input">투자자/VC 이름</label>
+                            <input type="text" id="investor-name-input" placeholder="예: Sequoia Capital, 김철수 파트너">
+                        </div>
+                        <div class="form-group">
+                            <label for="meeting-date-input">미팅 날짜</label>
+                            <input type="date" id="meeting-date-input">
+                        </div>
+                        <div class="form-group">
+                            <label for="meeting-purpose-input">미팅 목적</label>
+                            <textarea id="meeting-purpose-input" rows="3" placeholder="예: 시드 투자 유치를 위한 첫 미팅, 제품 데모 및 질의응답"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="key-message-input">창업자가 강조하고 싶은 핵심 메시지</label>
+                            <textarea id="key-message-input" rows="3" placeholder="예: 우리 팀의 기술적 우위, 초기 시장 검증 데이터, 경쟁사 대비 차별점"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="concerns-input">예상 질문 또는 걱정되는 부분</label>
+                            <textarea id="concerns-input" rows="3" placeholder="예: 수익 모델의 확장 가능성, 시장 진입 전략의 구체성, 핵심 인력 이탈 리스크"></textarea>
+                        </div>
+                        <button id="generate-meeting-prep" class="btn-primary">미팅 준비 생성</button>
+                    </div>
+                    <div id="meeting-output" class="meeting-output-section">
+                        <!-- 결과가 여기에 표시됩니다. -->
+                    </div>
+                </div>
+            </section>
+
             <!-- Placeholder Pages -->
             <section id="pipeline-page" class="page-section hidden"><div class="card"><h3>Pipeline</h3><p>서비스 준비 중입니다.</p></div></section>
-            <section id="meeting-agent-page" class="page-section hidden"><div class="card"><h3>Meeting Agent</h3><p>서비스 준비 중입니다.</p></div></section>
             <section id="deal-agent-page" class="page-section hidden"><div class="card"><h3>Deal Agent</h3><p>서비스 준비 중입니다.</p></div></section>
             <section id="settings-page" class="page-section hidden"><div class="card"><h3>Settings</h3><p>서비스 준비 중입니다.</p></div></section>
 

@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const pitchOutput = document.getElementById('pitch-output');
     const matchInvestorsBtn = document.getElementById('match-investors');
     const outreachOutput = document.getElementById('outreach-output');
+    const generateMeetingPrepBtn = document.getElementById('generate-meeting-prep');
+    const meetingOutput = document.getElementById('meeting-output');
 
     // --- Theme Toggle --- //
     const applyTheme = (theme) => {
@@ -174,6 +176,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchInvestorsBtn.disabled = false;
                 matchInvestorsBtn.textContent = '투자자 매칭';
             }, 2000);
+        });
+    }
+
+    // --- Meeting Agent --- //
+    if (generateMeetingPrepBtn) {
+        generateMeetingPrepBtn.addEventListener('click', () => {
+            generateMeetingPrepBtn.disabled = true;
+            generateMeetingPrepBtn.textContent = 'AI 분석 중...';
+            meetingOutput.innerHTML = '';
+
+            setTimeout(() => {
+                // Read input values
+                const investorName = document.getElementById('investor-name-input').value || '투자자';
+                const meetingDate = document.getElementById('meeting-date-input').value;
+                const meetingPurpose = document.getElementById('meeting-purpose-input').value || '투자 유치';
+                const keyMessage = document.getElementById('key-message-input').value || '우리의 핵심 경쟁력';
+                const concerns = document.getElementById('concerns-input').value || '시장 경쟁';
+
+                // Generate mock data
+                const mockData = {
+                    brief: `오는 ${meetingDate || '예정된 날짜'}에 ${investorName}와(과)의 미팅은 '${meetingPurpose}'을(를) 목표로 합니다. 우리 팀의 '${keyMessage}'을(를) 효과적으로 전달하는 것이 중요합니다.`,
+                    interestPoints: [
+                        `${investorName}는 최근 [관련 산업 분야]에 높은 관심을 보였습니다.`,
+                        `포트폴리오사 중 [유사/경쟁 서비스]와의 차별점을 분명히 해야 합니다.`,
+                        `최근 인터뷰에서 [특정 기술/시장 트렌드]에 대한 긍정적 전망을 밝혔습니다.`
+                    ],
+                    questions: [
+                        `현재 저희가 파악한 [핵심 지표]의 성장률이 다소 낮아 보이는데, 이에 대한 계획이 있나요?`,
+                        `말씀하신 '${keyMessage}' 외에, 경쟁사 대비 확실한 기술적 해자는 무엇인가요?`,
+                        `주요 팀원들의 이탈 가능성은 없나요? 특히 핵심 개발자의 동기부여가 중요해 보입니다.`,
+                        `언급하신 '${concerns}' 문제에 대해 구체적으로 어떻게 대응할 계획이신가요?`,
+                        `5년 뒤 우리 회사는 어떤 모습일 것이라고 예상하시나요? 가장 큰 비전을 보여주세요.`
+                    ],
+                    strategy: `각 질문에 대해 자신감 있게 답변하되, 항상 '${keyMessage}' 메시지와 연결하여 일관된 인상을 주어야 합니다. 특히, '${concerns}'에 대한 우려를 기회로 전환하는 논리를 준비해야 합니다. (예: '그 부분이 바로 저희가 해결하려는 핵심 문제입니다.')`,
+                    checklist: [
+                        '회사 소개서 (최신 버전)',
+                        '제품/서비스 데모 시나리오',
+                        '핵심 지표(KPI) 요약 자료',
+                        `미팅 참여자(상대방) 프로필 및 과거 투자 이력 재확인`,
+                        '노트북 및 충전기, 인터넷 연결 확인'
+                    ],
+                    followUpEmail: `Subject: [당사명] OOO, ${meetingDate} 미팅 후속 이메일 드립니다.\n\n안녕하세요, ${investorName}님.\n\n오늘 귀한 시간을 내어 미팅에 참여해주셔서 진심으로 감사합니다. 저희가 '${keyMessage}'을(를) 통해 해결하고자 하는 문제와 비전에 공감해주셔서 더욱 뜻깊은 시간이었습니다.\n\n말씀 나눈 내용 중 추가로 궁금하신 점이나 필요하신 자료가 있다면 언제든지 편하게 말씀해주세요.\n\n긍정적인 검토를 기대하며, 곧 좋은 소식으로 다시 연락드릴 수 있기를 바랍니다.\n\n감사합니다.\nOOO 드림`
+                };
+
+                // Render output
+                meetingOutput.innerHTML = `
+                    <div class="card"><h4>미팅 브리프</h4><p>${mockData.brief}</p></div>
+                    <div class="card"><h4>${investorName}의 예상 관심 포인트</h4><ul>${mockData.interestPoints.map(p => `<li>${p}</li>`).join('')}</ul></div>
+                    <div class="card"><h4>예상 질문 5가지</h4><ul>${mockData.questions.map(q => `<li>${q}</li>`).join('')}</ul></div>
+                    <div class="card"><h4>답변 전략</h4><p>${mockData.strategy}</p></div>
+                    <div class="card"><h4>미팅 체크리스트</h4><ul>${mockData.checklist.map(i => `<li><input type="checkbox" id="${i.replace(/\s+/g, '-')}"> <label for="${i.replace(/\s+/g, '-')}">${i}</label></li>`).join('')}</ul></div>
+                    <div class="card"><h4>후속 이메일 초안</h4><div class="email-draft-box">${mockData.followUpEmail}</div></div>
+                `;
+
+                generateMeetingPrepBtn.disabled = false;
+                generateMeetingPrepBtn.textContent = '미팅 준비 생성';
+            }, 1800);
         });
     }
 });
