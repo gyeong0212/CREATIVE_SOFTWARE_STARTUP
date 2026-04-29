@@ -27,26 +27,31 @@ NexusFounder OS is an AI-powered deal-closing platform designed for solo founder
 - **Output Area:** Displays the generated pitch (Problem, Solution, etc.).
 
 #### C. Outreach Agent Page (`#outreach-agent-page`)
-- **Input Form:** Dropdown selectors for `스타트업 섹터` (Sector), `투자 단계` (Stage), `목표 투자금` (Goal), and `지역` (Region).
-- **Matching Button:** A "투자자 매칭" (Match Investors) button.
-- **Output Area:** Displays a list of recommended investor cards, each including:
-  - Investor/VC Name
-  - Fit Score (%)
-  - Investment Thesis
-  - Recommendation Reason
-  - Draft of a personalized outreach message.
+- **Input Form:** Dropdown selectors for startup criteria.
+- **Matching Button:** Triggers mock investor matching.
+- **Output Area:** Displays a list of recommended investor cards.
+
+#### D. Meeting Agent Page (`#meeting-agent-page`)
+- **Input Form:** Fields for investor name, meeting date, purpose, key messages, and concerns.
+- **Generate Button:** A "미팅 준비 생성" (Generate Meeting Prep) button.
+- **Output Area:** Displays a structured meeting preparation guide including:
+  - Meeting Brief
+  - Investor's Points of Interest
+  - 5 Expected Questions & Answer Strategy
+  - Pre-Meeting Checklist
+  - Draft of a Follow-up Email.
 
 ### 3. Interactive Features
 - **Page Navigation:** Sidebar links show/hide pages.
 - **Theme Toggle:** Switches between light and dark modes with `localStorage` persistence.
 - **Demo Mode:** Simulates AI agent workflow on the dashboard.
-- **Pitch Generation:** Mock pitch generation on the Pitch Agent page.
-- **Investor Matching:** Mock investor matching on the Outreach Agent page.
+- **Mock Data Generation:** All "generation" buttons (Pitch, Outreach, Meeting) use mock data and `setTimeout` to simulate AI processing.
 
-## Current Plan: Implement Outreach Agent Page
+## Current Plan: Implement Meeting Agent Page
 
 1.  **[Done] Create `blueprint.md`:** Document the project's purpose and features.
-2.  **[Done] Implement Initial Dashboard & Pitch Agent Page:** Create the HTML, CSS, and JS for the initial pages.
-3.  **[Next] Update `index.html`:** Add the new, hidden HTML structure for the Outreach Agent page.
-4.  **[Pending] Update `style.css`:** Add styles for the Outreach Agent's form and result cards.
-5.  **[Pending] Update `main.js`:** Implement the navigation and mock investor matching functionality.
+2.  **[Done] Implement Initial Dashboard & Pitch Agent Page.**
+3.  **[Done] Implement Outreach Agent Page.**
+4.  **[Next] Update `index.html`:** Add the new, hidden HTML structure for the Meeting Agent page.
+5.  **[Pending] Update `style.css`:** Add styles for the Meeting Agent's form and structured output.
+6.  **[Pending] Update `main.js`:** Implement the navigation and mock meeting prep generation functionality.
