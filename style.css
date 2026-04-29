@@ -35,6 +35,10 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .container {
     display: flex;
 }
@@ -220,6 +224,46 @@ body {
     font-size: 13px;
     line-height: 1.6;
 }
+
+/* Pitch Agent Page Styles */
+.pitch-form .form-group {
+    margin-bottom: 20px;
+}
+
+.pitch-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.pitch-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 14px;
+    resize: vertical;
+}
+
+.pitch-output-section {
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+}
+
+.pitch-output-section h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.pitch-output-section p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
 
 @media (max-width: 1200px) {
     .kpi-cards {
