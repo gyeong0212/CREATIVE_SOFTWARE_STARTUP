@@ -123,7 +123,59 @@
 
             <!-- Placeholder Pages -->
             <section id="pipeline-page" class="page-section hidden"><div class="card"><h3>Pipeline</h3><p>서비스 준비 중입니다.</p></div></section>
-            <section id="deal-agent-page" class="page-section hidden"><div class="card"><h3>Deal Agent</h3><p>서비스 준비 중입니다.</p></div></section>
+            
+            <!-- Deal Agent Page -->
+            <section id="deal-agent-page" class="page-section hidden">
+                <div class="card">
+                    <h3>Deal Agent: 협상의 모든 순간을 함께</h3>
+                    <p>투자 조건과 핵심 조항을 입력하면 AI가 딜을 분석하고, 독소 조항을 경고하며, 협상 전략과 카운터 오퍼 초안을 제안합니다.</p>
+                    <div class="deal-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="deal-investor-name-input">투자자/VC 이름</label>
+                                <input type="text" id="deal-investor-name-input" placeholder="예: Sequoia Capital, a16z, 김철수 파트너">
+                            </div>
+                            <div class="form-group">
+                                <label for="deal-stage-select">딜 단계</label>
+                                <select id="deal-stage-select">
+                                    <option>Term Sheet 검토</option>
+                                    <option>SAFE 협상</option>
+                                    <option>주식매매계약(SPA)</option>
+                                    <option>클로징 직전</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="deal-amount-input">제안받은 투자 금액</label>
+                                <input type="text" id="deal-amount-input" placeholder="예: $1M, 10억 원">
+                            </div>
+                            <div class="form-group">
+                                <label for="deal-valuation-input">제안받은 밸류에이션 (Pre-money)</label>
+                                <input type="text" id="deal-valuation-input" placeholder="예: $8M, 80억 원">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deal-key-terms-input">협상하고 싶은 핵심 조건</label>
+                            <textarea id="deal-key-terms-input" rows="3" placeholder="예: 밸류에이션 상향, 보드 시트 1석 유지, 옵션풀 사이즈, 베스팅 스케줄"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="deal-toxic-clauses-input">우려되는 독소 조항 또는 불리한 조항</label>
+                            <textarea id="deal-toxic-clauses-input" rows="3" placeholder="예: 2x 참여형 청산우선권, 풀 래칫 희석방지 조항, 과도한 드래그얼롱, 창업자 베스팅 재설정"></textarea>
+                        </div>
+                        <button id="generate-deal-analysis" class="btn-primary">딜 분석 생성</button>
+                    </div>
+                    <div id="deal-output" class="deal-output-section">
+                        <!--
+                            결과가 여기에 표시됩니다. 추후 main.js에서 다음 6개 섹션으로 렌더링:
+                            1) 딜 요약 (Deal Summary)
+                            2) 핵심 조항 분석 (밸류에이션 / 지분 희석률 / 청산우선권 등)
+                            3) 독소 조항 경고
+                            4) 협상 전략 제안
+                            5) 협상 시나리오 3가지 (공격적 / 균형 / 방어적)
+                            6) 카운터 오퍼 초안 이메일
+                        -->
+                    </div>
+                </div>
+            </section>
             <section id="settings-page" class="page-section hidden"><div class="card"><h3>Settings</h3><p>서비스 준비 중입니다.</p></div></section>
 
         </main>
