@@ -235,4 +235,152 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1800);
         });
     }
+    // --- Deal Agent --- //
+    const generateDealAnalysisBtn = document.getElementById('generate-deal-analysis');
+    const dealOutput = document.getElementById('deal-output');
+
+    if (generateDealAnalysisBtn) {
+        // Helper: 문자열에서 숫자 추출 (예: "$1M" -> 1000000, "10억" -> 1000000000, "5,000,000" -> 5000000)
+        const parseAmount = (str) => {
+            if (!str) return null;
+            const cleaned = str.replace(/,/g, '').toLowerCase();
+            const num = parseFloat(cleaned.replace(/[^0-9.]/g, ''));
+            if (isNaN(num) || num <= 0) return null;
+            // 단위 추정
+            if (cleaned.includes('m') || cleaned.includes('백만')) return num * 1_000_000;
+            if (cleaned.includes('b') || cleaned.includes('billion')) return num * 1_000_000_000;
+            if (cleaned.includes('억')) return num * 100_000_000;
+            if (cleaned.includes('k') || cleaned.includes('천')) return num * 1_000;
+            return num;
+        };
+
+        // Helper: 지분 희석률 계산
+        const calculateDilution = (amountStr, valuationStr) => {
+            const amount = parseAmount(amountStr);
+            const valuation = parseAmount(valuationStr);
+            if (!amount || !valuation) return null;
+            const dilution = (amount / (valuation + amount)) * 100;
+            return dilution.toFixed(2);
+        };
+
+        // 단계별 mock 데이터
+        const stageProfiles = {
+            'Term Sheet 검토': {
+                tone: 'Term Sheet 단계는 향후 모든 계약의 토대가 되므로, 핵심 조항을 명확히 협상해야 합니다.',
+                toxicAlerts: [
+                    { title: 'Full Ratchet 희석방지', detail: '다음 라운드에서 낮은 가격으로 발행 시 창업자 지분이 과도하게 희석될 수 있습니다. Weighted Average 방식으로 협상하세요.' },
+                    { title: '참여형 청산우선권 (Participating Preferred)', detail: '엑싯 시 투자자가 투자금 회수 후에도 잔여 분배에 참여하게 되어 창업자 몫이 크게 줄어듭니다. Non-participating 1x로 협상이 일반적입니다.' }
+                ],
+                strategy: [
+                    'Term Sheet은 법적 구속력이 약한 조항이 많지만, 한번 합의하면 SPA에서 뒤집기 어렵습니다. 처음부터 핵심 조항을 챙기세요.',
+                    '경쟁 투자자(다른 VC)의 관심을 동시에 진행해 협상 레버리지를 확보하세요.',
+                    '변호사 검토를 받기 전에는 절대 서명하지 마세요.'
+                ]
+            },
+            'SAFE 협상': {
+                tone: 'SAFE는 단순해 보이지만 valuation cap과 discount, MFN 조항이 향후 라운드에 큰 영향을 미칩니다.',
+                toxicAlerts: [
+                    { title: '낮은 Valuation Cap', detail: 'cap이 낮으면 다음 라운드에서 SAFE 보유자가 과도한 지분을 가져갑니다. 현실적인 회사 가치를 반영하세요.' },
+                    { title: 'MFN(Most Favored Nation) 조항 누락', detail: '이후 더 좋은 조건으로 SAFE를 발행하면 자동으로 같은 조건을 적용받는 보호 장치가 없습니다.' }
+                ],
+                strategy: [
+                    'Post-money SAFE인지 Pre-money SAFE인지 명확히 확인하세요. Post-money가 투자자에게 더 유리합니다.',
+                    'Discount rate(보통 15~20%)와 valuation cap을 모두 두는 경우, 낮은 쪽이 적용되므로 양쪽 다 협상해야 합니다.',
+                    'Pro-rata 권리는 향후 시리즈 A에서 투자자의 추가 투자를 보장하므로, 신중히 결정하세요.'
+                ]
+            },
+            '주식매매계약(SPA)': {
+                tone: 'SPA는 법적 구속력이 강한 최종 계약입니다. 모든 진술/보장/면책 조항을 정밀하게 검토해야 합니다.',
+                toxicAlerts: [
+                    { title: '과도한 진술 및 보장(Reps & Warranties)', detail: '창업자 개인이 보증해야 하는 항목 범위가 넓고, 위반 시 무제한 책임을 지게 될 수 있습니다.' },
+                    { title: '광범위한 면책(Indemnification) 조항', detail: '면책 한도(cap)와 기간(survival period)을 명확히 설정하지 않으면 장기간 책임을 떠안게 됩니다.' }
+                ],
+                strategy: [
+                    '진술/보장 위반 시 책임 한도(cap)를 투자금의 25~50% 수준으로 협상하세요.',
+                    'Survival period(보장 기간)는 일반적으로 12~24개월이 표준입니다.',
+                    'Knowledge qualifier("aware of")를 추가해 창업자가 인지하지 못한 사항에 대한 책임을 제한하세요.'
+                ]
+            },
+            '클로징 직전': {
+                tone: '클로징 직전은 마지막 협상 기회입니다. 작은 조항 하나가 5년 후 큰 차이를 만듭니다.',
+                toxicAlerts: [
+                    { title: 'Drag-along 임계치 과도하게 낮음', detail: '소수 투자자가 매각을 강제할 수 있게 되어 창업자가 원치 않는 엑싯을 강요받을 수 있습니다. 50%+ 또는 과반 의결권으로 협상하세요.' },
+                    { title: '창업자 베스팅 재설정', detail: '이미 일부 베스팅된 지분을 다시 4년 베스팅으로 재설정하는 조항은 창업자에게 매우 불리합니다.' }
+                ],
+                strategy: [
+                    '모든 closing condition(선행 조건)을 다시 검토하고, 충족 가능한지 확인하세요.',
+                    '서명 직전 추가되는 조항(side letter 포함)을 절대 가볍게 보지 마세요.',
+                    '클로징 후 자금 송금 일정과 주식 발행 절차를 명확히 합의하세요.'
+                ]
+            }
+        };
+
+        generateDealAnalysisBtn.addEventListener('click', () => {
+            generateDealAnalysisBtn.disabled = true;
+            generateDealAnalysisBtn.textContent = '딜 분석 중...';
+            dealOutput.innerHTML = '';
+
+            setTimeout(() => {
+                // 입력값 읽기 (fallback 포함)
+                const investorRaw = document.getElementById('deal-investor-name-input').value.trim();
+                const investor = investorRaw || '투자자/VC';
+                const stage = document.getElementById('deal-stage-select').value || 'Term Sheet 검토';
+                const amountRaw = document.getElementById('deal-amount-input').value.trim();
+                const valuationRaw = document.getElementById('deal-valuation-input').value.trim();
+                const keyTermsRaw = document.getElementById('deal-key-terms-input').value.trim();
+                const toxicClausesRaw = document.getElementById('deal-toxic-clauses-input').value.trim();
+
+                const amountDisplay = amountRaw || '제안 금액 미입력';
+                const valuationDisplay = valuationRaw || '밸류에이션 미입력';
+                const keyTerms = keyTermsRaw || '주요 협상 조건이 명시되지 않았습니다.';
+                const toxicClauses = toxicClausesRaw || '';
+
+                // 지분 희석률 계산
+                const dilution = calculateDilution(amountRaw, valuationRaw);
+                const dilutionDisplay = dilution
+                    ? `${dilution}%`
+                    : '계산 불가';
+                const dilutionNote = dilution
+                    ? `투자금 ${amountDisplay} ÷ (Pre-money ${valuationDisplay} + 투자금)`
+                    : '금액과 밸류에이션을 숫자 형식으로 입력하면 자동 계산됩니다.';
+
+                // 단계별 프로파일 가져오기
+                const profile = stageProfiles[stage] || stageProfiles['Term Sheet 검토'];
+
+                // 독소 조항 리스트 구성 (사용자 입력 + 단계별 추가 항목)
+                const userToxicHtml = toxicClausesRaw
+                    ? `<li><strong>창업자가 우려한 조항</strong>${toxicClausesRaw}</li>`
+                    : '';
+                const profileToxicHtml = profile.toxicAlerts
+                    .map(t => `<li><strong>${t.title}</strong>${t.detail}</li>`)
+                    .join('');
+
+                // 협상 전략 리스트 (사용자 핵심 조건 우선 반영)
+                const userStrategyHtml = keyTermsRaw
+                    ? `<li>창업자가 강조한 핵심 조건: "${keyTermsRaw}" — 이 조건을 1순위로 협상 테이블에 올리고, 다른 조항에서 양보 여지를 만드세요.</li>`
+                    : '';
+                const profileStrategyHtml = profile.strategy
+                    .map(s => `<li>${s}</li>`)
+                    .join('');
+
+                // 시나리오 데이터
+                const scenarios = [
+                    {
+                        cls: 'aggressive',
+                        title: '공격적 (Push for Better Terms)',
+                        tag: '공격적',
+                        summary: `${investor}의 제안을 적극 반박하고 더 유리한 조건을 끌어냅니다. 다른 VC와 경쟁시키는 카드를 활용하세요.`,
+                        bullets: [
+                            '밸류에이션 20~30% 상향 요구',
+                            'Non-participating 1x 청산우선권 고수',
+                            '이사회 시트 창업자 과반 유지',
+                            '독소 조항 전면 거부'
+                        ]
+                    },
+                    {
+                        cls: 'balanced',
+                        title: '균형 (Win-Win Compromise)',
+                        tag: '균형',
+                        summary: `${investor}와 장기 파트너십을 고려해 합리적 선에서 합의합니다. 핵심 조건은 지키되 부수 조항은 양보합니다.`,
+                        bullets: [
 });
