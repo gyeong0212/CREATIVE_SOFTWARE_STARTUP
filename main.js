@@ -383,4 +383,141 @@ document.addEventListener('DOMContentLoaded', () => {
                         tag: '균형',
                         summary: `${investor}와 장기 파트너십을 고려해 합리적 선에서 합의합니다. 핵심 조건은 지키되 부수 조항은 양보합니다.`,
                         bullets: [
+                            '밸류에이션 10~15% 상향 협상',
+                            '청산우선권 1x non-participating 합의',
+                            '이사회 시트 동수 (창업자 2 / 투자자 2 / 외부 1)',
+                            '주요 독소 조항만 제거, 나머지 수용'
+                        ]
+                    },
+                    {
+                        cls: 'defensive',
+                        title: '방어적 (Accept and Close Fast)',
+                        tag: '방어적',
+                        summary: `자금 사정이 급하거나 ${investor}가 전략적으로 중요한 경우, 핵심 독소 조항만 제거하고 빠르게 클로징합니다.`,
+                        bullets: [
+                            '제안된 밸류에이션 그대로 수용',
+                            '청산우선권은 1x로만 조정',
+                            '이사회 구성은 투자자 제안 수용',
+                            '가장 위험한 1~2개 독소 조항만 제거'
+                        ]
+                    }
+                ];
+
+                // 카운터 오퍼 이메일
+                const counterEmail = `Subject: ${investor} 제안에 대한 카운터 오퍼 — ${stage}
+
+안녕하세요, ${investor}님.
+
+${stage} 단계에서 보내주신 제안서를 신중히 검토했습니다. 귀사와의 파트너십에 큰 기대를 갖고 있으며, 장기적인 동반자 관계를 위해 몇 가지 조건을 함께 조율하고자 합니다.
+
+1. 밸류에이션 및 투자 조건
+   - 제안받은 ${valuationDisplay} (Pre-money) 대비, 저희가 최근 달성한 핵심 지표와 시장 트렌드를 고려할 때 상향 조정이 필요하다고 판단됩니다.
+   - 예상 지분 희석률은 약 ${dilutionDisplay} 수준으로 검토되었습니다.
+
+2. 핵심 협상 요청 사항
+   - ${keyTermsRaw ? keyTermsRaw : '주요 조건에 대한 추가 논의를 요청드립니다.'}
+   - 청산우선권은 1x non-participating으로 조정 부탁드립니다.
+   - 이사회 구성은 창업자 측 의결권이 보장되는 구조를 희망합니다.
+
+3. 우려 사항
+   ${toxicClausesRaw ? `- ${toxicClausesRaw}에 대한 조정이 반드시 필요합니다.` : '- 일부 보호 조항에 대한 추가 검토를 요청드립니다.'}
+   - 창업자 베스팅, 희석방지 조항은 표준 시장 관행에 맞춰 조정 부탁드립니다.
+
+위 사항에 대해 다음 주 중 미팅을 통해 구체적으로 논의했으면 합니다. 가능한 시간을 알려주시면 일정을 맞추겠습니다.
+
+좋은 파트너십을 기대하며, 답변 기다리겠습니다.
+
+감사합니다.
+OOO 드림`;
+
+                // 결과 렌더링
+                dealOutput.innerHTML = `
+                    <div class="card deal-summary">
+                        <h4>딜 요약</h4>
+                        <p>${investor}와(과)의 <strong>${stage}</strong> 단계에서 투자금 <strong>${amountDisplay}</strong>, Pre-money 밸류에이션 <strong>${valuationDisplay}</strong> 조건이 제시되었습니다. ${profile.tone}</p>
+                    </div>
+
+                    <div class="card">
+                        <h4>핵심 조항 분석</h4>
+                        <div class="deal-terms-grid">
+                            <div class="deal-term-item">
+                                <span class="term-label">Pre-money 밸류에이션</span>
+                                <span class="term-value">${valuationDisplay}</span>
+                                <span class="term-note">투자 직전 회사 가치</span>
+                            </div>
+                            <div class="deal-term-item">
+                                <span class="term-label">투자 금액</span>
+                                <span class="term-value">${amountDisplay}</span>
+                                <span class="term-note">신주 발행 규모</span>
+                            </div>
+                            <div class="deal-term-item">
+                                <span class="term-label">예상 지분 희석률</span>
+                                <span class="term-value">${dilutionDisplay}</span>
+                                <span class="term-note">${dilutionNote}</span>
+                            </div>
+                            <div class="deal-term-item">
+                                <span class="term-label">청산우선권</span>
+                                <span class="term-value">1x non-participating</span>
+                                <span class="term-note">시장 표준 권장 (참여형은 거부)</span>
+                            </div>
+                            <div class="deal-term-item">
+                                <span class="term-label">옵션풀</span>
+                                <span class="term-value">10% pre-money</span>
+                                <span class="term-note">post-money 기준 시 추가 희석 발생</span>
+                            </div>
+                            <div class="deal-term-item">
+                                <span class="term-label">이사회 구성</span>
+                                <span class="term-value">창업자 2 / 투자자 1</span>
+                                <span class="term-note">초기 라운드 권장 구조</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>독소 조항 경고</h4>
+                        <div class="deal-warning-box">
+                            <div class="warning-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                ${stage} 단계에서 주의해야 할 조항
+                            </div>
+                            <ul class="deal-warning-list">
+                                ${userToxicHtml}
+                                ${profileToxicHtml}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>협상 전략 제안</h4>
+                        <ul class="deal-strategy-list">
+                            ${userStrategyHtml}
+                            ${profileStrategyHtml}
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h4>협상 시나리오 3가지</h4>
+                        <div class="deal-scenarios">
+                            ${scenarios.map(s => `
+                                <div class="scenario-card ${s.cls}">
+                                    <span class="scenario-tag">${s.tag}</span>
+                                    <h5>${s.title}</h5>
+                                    <p>${s.summary}</p>
+                                    <ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>카운터 오퍼 초안 이메일</h4>
+                        <div class="email-draft-box">${counterEmail}</div>
+                    </div>
+                `;
+
+                generateDealAnalysisBtn.disabled = false;
+                generateDealAnalysisBtn.textContent = '딜 분석 생성';
+            }, 1800);
+        });
+    }
 });
